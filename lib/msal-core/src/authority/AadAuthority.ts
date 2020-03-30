@@ -4,7 +4,7 @@
  */
 
 import { Authority, AuthorityType } from "./Authority";
-import { XhrClient } from "../XHRClient";
+import { XhrClient, XhrResponse } from "../XHRClient";
 import { AADTrustedHostList } from "../utils/Constants";
 import HttpEvent from "../telemetry/HttpEvent";
 import TelemetryManager from "../telemetry/TelemetryManager";
@@ -45,8 +45,8 @@ export class AadAuthority extends Authority {
         httpEvent.httpMethod = httpMethod;
         telemetryManager.startEvent(httpEvent);
         return client.sendRequestAsync(this.AadInstanceDiscoveryEndpointUrl, httpMethod, true)
-            .then((response) => {
-                httpEvent.httpResponseStatus = response.client.status;
+            .then((response: XhrResponse) => {
+                httpEvent.httpResponseStatus = response.statusCode;
                 return response.responseBody.tenant_discovery_endpoint;
             })
             .catch(err => {
